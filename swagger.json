@@ -1,0 +1,247 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Dungeon Generator API",
+    "description": "API para generar mazmorras procedurales con diferentes tipos, habitaciones y enemigos.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Servidor de desarrollo"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Dungeons",
+      "description": "Endpoints para generación y gestión de mazmorras"
+    }
+  ],
+  "paths": {
+    "/dungeons": {
+      "get": {
+        "tags": ["Dungeons"],
+        "summary": "Obtener todas las mazmorras",
+        "description": "Retorna una lista de todas las mazmorras generadas y almacenadas en la base de datos",
+        "responses": {
+          "200": {
+            "description": "Lista de mazmorras",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dungeon"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Dungeons"],
+        "summary": "Crear una nueva mazmorra",
+        "description": "Genera una mazmorra del tipo especificado y la almacena en la base de datos",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["catacumbas", "templo", "cueva"],
+                    "example": "catacumbas"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Mazmorra creada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dungeon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Tipo de mazmorra inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Tipo de mazmorra no válido"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dungeons/id={id}": {
+      "get": {
+        "tags": ["Dungeons"],
+        "summary": "Obtener mazmorra por ID",
+        "description": "Retorna los detalles de una mazmorra específica",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único de la mazmorra",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalles de la mazmorra",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dungeon"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Mazmorra no encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Mazmorra no encontrada"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dungeons/random-dungeon": {
+      "get": {
+        "tags": ["Dungeons"],
+        "summary": "Generar mazmorra aleatoria",
+        "description": "Genera una mazmorra de tipo aleatorio y la almacena en la base de datos",
+        "responses": {
+          "200": {
+            "description": "Mazmorra generada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dungeon"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Error al generar la mazmorra"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Dungeon": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID único de la mazmorra"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["catacumbas", "templo", "cueva"],
+            "description": "Tipo de mazmorra"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "description": "Número de habitación"
+                },
+                "enemies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Lista de enemigos en la habitación"
+                }
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de creación"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de última actualización"
+          }
+        },
+        "example": {
+          "_id": "507f1f77bcf86cd799439011",
+          "type": "catacumbas",
+          "rooms": [
+            {
+              "id": 1,
+              "enemies": ["Esqueleto", "Zombi"]
+            },
+            {
+              "id": 2,
+              "enemies": ["Espectro"]
+            }
+          ],
+          "createdAt": "2023-08-20T12:00:00Z",
+          "updatedAt": "2023-08-20T12:00:00Z"
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Mensaje de error descriptivo"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
