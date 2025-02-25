@@ -21,3 +21,25 @@ exports.login = async (req, res) => {
         res.status(500).json({ error: 'Error al iniciar sesión' });
     }
 };
+
+exports.register = async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // Verifica si el usuario ya existe
+        const existingUser = await User.findOne({ where: { username } });
+        if (existingUser) {
+            return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
+        }
+
+        // Crea un nuevo usuario
+        const newUser = await User.create({ username, password });
+
+        // Genera un token JWT
+        const token = jwt.sign({ id: newUser.id, username: newUser.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.status(201).json({ token });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al registrar el usuario' });
+    }
+};
