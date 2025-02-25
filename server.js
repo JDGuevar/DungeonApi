@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     res.redirect('/api-docs');
 });
 
-// Rutas de la API
+// Rutas de la API protegidas
 app.use('/dungeons', dungeonRoutes);
 
 // Rutas de autenticación
