@@ -169,7 +169,7 @@
       "Dungeon": {
         "type": "object",
         "properties": {
-          "_id": {
+          "id": {
             "type": "string",
             "format": "uuid",
             "description": "ID único de la mazmorra"
@@ -185,13 +185,29 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "type": "number",
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "ID único de la habitación"
+                },
+                "room_number": {
+                  "type": "integer",
                   "description": "Número de habitación"
                 },
                 "enemies": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID único del enemigo"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Nombre del enemigo"
+                      }
+                    }
                   },
                   "description": "Lista de enemigos en la habitación"
                 }
@@ -210,16 +226,32 @@
           }
         },
         "example": {
-          "_id": "507f1f77bcf86cd799439011",
+          "id": "507f1f77bcf86cd799439011",
           "type": "catacumbas",
           "rooms": [
             {
-              "id": 1,
-              "enemies": ["Esqueleto", "Zombi"]
+              "id": "507f1f77bcf86cd799439012",
+              "room_number": 1,
+              "enemies": [
+                {
+                  "id": "507f1f77bcf86cd799439013",
+                  "name": "Esqueleto"
+                },
+                {
+                  "id": "507f1f77bcf86cd799439014",
+                  "name": "Zombi"
+                }
+              ]
             },
             {
-              "id": 2,
-              "enemies": ["Espectro"]
+              "id": "507f1f77bcf86cd799439015",
+              "room_number": 2,
+              "enemies": [
+                {
+                  "id": "507f1f77bcf86cd799439016",
+                  "name": "Espectro"
+                }
+              ]
             }
           ],
           "createdAt": "2023-08-20T12:00:00Z",
