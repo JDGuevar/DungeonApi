@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const dungeonRoutes = require('./src/routes/dungeonRoutes');
+const authRoutes = require('./src/routes/authRoutes');
 require('dotenv').config();
 const sequelize = require('./src/config/sequelize');
 const { Dungeon, Room, Enemy } = require('./src/models');
@@ -25,6 +26,9 @@ app.get('/', (req, res) => {
 
 // Rutas de la API
 app.use('/dungeons', dungeonRoutes);
+
+// Rutas de autenticación
+app.use('/auth', authRoutes);
 
 sequelize.sync({ force: true }) // Usa { force: true } solo en desarrollo para recrear las tablas
     .then(() => console.log('✅ Base de datos sincronizada'))

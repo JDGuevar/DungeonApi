@@ -1,6 +1,7 @@
 const Dungeon = require('./Dungeon');
 const Room = require('./Room');
 const Enemy = require('./Enemy');
+const User = require('./User');
 
 // Relación Dungeon -> Rooms (Una mazmorra tiene muchas habitaciones)
 Dungeon.hasMany(Room, { foreignKey: 'dungeon_id' });
@@ -14,4 +15,5 @@ module.exports = {
     Dungeon,
     Room,
     Enemy,
+    User,
 };
